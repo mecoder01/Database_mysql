@@ -1,0 +1,25 @@
+-------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for filter_provisions package--------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the filter_provisions exists after compiling the code
+SELECT object_name FROM user_objects;
+--filter_provisions exists
+
+--Executing the package filter_provisions by giving the valid input
+EXECUTE filter_provisions.proc_filter_by_prod_name('BURGER');	
+--Burger kings should be displayed as suppliers
+--"FOOD is supplied by BURGER KINGS" is displayed
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for filter_festivals package--------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the filter_festivals exists after compiling the code
+SELECT object_name FROM user_objects;
+--filter_festivals exists
+
+--Executing the package filter_festivals by giving the valid input
+EXECUTE filter_festivals.proc_filter_by_org_name('BROWNSON');		
+--Haloween festival's capacity, fee and total budget must be displayed
+--"The capacity of HALLOWEEN festival is 200 and the ticket fee is 100 where the total_budget is 10000" is displayed

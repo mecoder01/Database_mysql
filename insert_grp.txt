@@ -1,0 +1,173 @@
+-- @C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\insert_grp.txt;
+
+--Inserting the data into the provisions table
+INSERT INTO provisions (provision_id,provision_title,supplier,product)
+VALUES(seq_provision_id.NEXTVAL,'FOOD','BURGER KINGS',product_table_type(
+		product_type('BURGER',3,'FAST FOOD',200,'AVAILABLE FOR LUNCH AND SUPPER'),
+		product_type('PIZZA',6,'FAST FOOD',300,'AVAILABLE IN MANY FLAVOURS'),
+		product_type('CHOWMEIN',2,'FAST FOOD',100,'TASTY NOODLES AVAILABLE IN MANY FLAVOURS'),
+		product_type('FRENCH FRIES',2,'FAST FOOD',800,'BREAKFAST')
+		));
+--1 row created.		
+INSERT INTO provisions (provision_id,provision_title,supplier,product)
+VALUES(seq_provision_id.NEXTVAL,'LIGHTS','APOLLO LIGHTING LTD.',product_table_type(
+		product_type('FOCUS LIGHT',120,'STAGE LIGHT',5,'HIGH INTESITY LIGHT'),
+		product_type('FLOOD LIGHT',90,'STADIUM LIGHT',2,'HIGH-INTESITY ARTIFICIAL LIGHT'),
+		product_type('LED LIGHT',110,'DECORATION LIGHT',6,'USEDFOR DECORATION'),
+		product_type('BULB',60,'CABIN LIGHT',60,'USED IN ROOMS')
+		));
+--1 row created.
+INSERT INTO provisions (provision_id,provision_title,supplier,product)
+VALUES(seq_provision_id.NEXTVAL,'SOUNDS','TAMA SOUNDS LTD.',product_table_type(
+		product_type('SPEAKERS',90,'INSTUREMENT SPEAKERS',5,'HIGH VOLUME SPEAKERS'),
+		product_type('WIRELESS MIC',30,'MIC',6,'SUPER CLEAR SOUND'),
+		product_type('AMPLIFIER',80,'SOUND EFFECT',4,'HIGH DISTANCE COVERAGE AND LOUD'),
+		product_type('MIXER',50,'SOUND EFFECT',3,'USED FOR PLAYING VARIOUS SOUND EFFECTS')
+		));	
+--1 row created.
+
+INSERT INTO provisions (provision_id,provision_title,supplier,product)
+VALUES(seq_provision_id.NEXTVAL,'DRINKS','LIBRA DRINKS WHOLESALE',product_table_type(
+		product_type('WATER BOTTLES',1,'WATER',1000,'HYGIENIC DRINKING WATER'),
+		product_type('JUICES',2,'SOFT DRINKS',300,'FRESH JUICES INCLUDING DIFFERENT FRUITS FLAVOUR'),
+		product_type('HARD DRINKS',6,'ALCOHOLIC BEVARAGES',250,'HIGH BRAND ALCOHOLIC BEVARAGES'),
+		product_type('COFFEE AND TEA',3,'HOT AND COLD',1000,'WHILE HAVING BREAKFAST')
+		));	
+--1 row created.
+
+-- SELECT * FROM provisions;
+-- --4 rows selected.
+
+
+
+--Inserting the data into the locations table
+INSERT INTO locations (location_id, address)
+VALUES(seq_location_id.NEXTVAL,address_type('222 BATH STREET', 'BATH', 'UK'));
+--1 row created.
+INSERT INTO locations (location_id, address)
+VALUES(seq_location_id.NEXTVAL,address_type('164 AMPTON STREET', 'NORTHAMPTON', 'UK'));
+--1 row created.
+INSERT INTO locations (location_id, address)
+VALUES(seq_location_id.NEXTVAL,address_type('568 BACK STREET', 'MANCHESTER', 'UK'));
+--1 row created.
+INSERT INTO locations (location_id, address)
+VALUES(seq_location_id.NEXTVAL,address_type('183 HORTON STREET', 'NORTHAMPTON', 'UK'));
+--1 row created.
+INSERT INTO locations (location_id, address)
+VALUES(seq_location_id.NEXTVAL,address_type('111 WARRINGTON STREET', 'LIVERPOOL', 'UK'));
+--1 row created.
+INSERT INTO locations (location_id, address)
+VALUES(seq_location_id.NEXTVAL,address_type('314 BOLTON STREET', 'MANCHESTER', 'UK'));
+--1 row created.
+INSERT INTO locations (location_id, address)
+VALUES(seq_location_id.NEXTVAL,address_type('314 TOTTON STREET', 'SOUTHAMPTON', 'UK'));
+--1 row created.
+
+-- SELECT * FROM locations;
+-- --7 rows selected.
+
+--Inserting the data into the organizers table
+INSERT INTO organizers (organizer_firstname, organizer_surname, contact, gender, description)
+VALUES ('BROWNSON', 'CHARLES',contact_type('brownsoncharles@gmail.com', '+44 7871 123456'),'M','His support to the events is marvelous.');
+		
+INSERT INTO organizers (organizer_firstname, organizer_surname, contact, gender, description)
+VALUES ('MARK', 'SNOW', contact_type('marksnow33@gmail.com', '+44 8741 548326'),'M','He is reputed organizers.');	
+
+INSERT INTO organizers (organizer_firstname, organizer_surname, contact, gender, description)
+VALUES ('ARMAN', 'GARRETT', contact_type('armangarrett22@gmail.com', '+44 9645 528641'),'F','She has high creativity level to handle the events.');	
+
+INSERT INTO organizers (organizer_firstname, organizer_surname, contact, gender, description)
+VALUES ('ALEYNA', 'SENIOR', contact_type('aleynasenior01@gmail.com', '+44 56756 635478'),'F','She has ability to manage all the issue occur in the festivals.');
+
+INSERT INTO organizers (organizer_firstname, organizer_surname, contact, gender, description)
+VALUES ('BRYCE', 'REYNA', contact_type('brycereyna32@gmail.com', '+44 56756 635478'),'M','He has ability to manage all the issue occur in the festivals.');		
+
+-- SELECT * FROM organizers;
+-- --5 rows selected.
+
+
+--Inserting the data into the festival_natures table
+INSERT INTO festival_natures(festival_nature_id, festival_type)
+VALUES(seq_festival_nature_id.NEXTVAL, 'RELIGIOUS');
+
+INSERT INTO festival_natures(festival_nature_id, festival_type)
+VALUES(seq_festival_nature_id.NEXTVAL, 'CULTURAL CELEBRATION');
+
+INSERT INTO festival_natures(festival_nature_id, festival_type)
+VALUES(seq_festival_nature_id.NEXTVAL, 'CELEBRATION');
+
+
+
+
+-- SELECT * FROM festival_natures;
+-- --3 rows selected.
+
+--Inserting the data into the festivals table
+INSERT INTO festivals (festival_id, location_id, festival_nature_id, title, fee, capacity, total_budget, time,organizer)
+SELECT seq_festival_id.NEXTVAL, 2006, 4002, 'HALLOWEEN', 50, 800, 10000,time_varray_type(time_type(
+		'30-OCT-2019','31-OCT-2019','start from 5PM')), REF(o) 
+		FROM organizers o
+		WHERE o.organizer_firstname = 'BROWNSON';
+--2 rows created.
+INSERT INTO festivals (festival_id, location_id, festival_nature_id, title, fee, capacity, total_budget, time,organizer)
+SELECT seq_festival_id.NEXTVAL, 2005, 4002, 'CHRISTMAS', 100, 1500, 25000,time_varray_type(time_type(
+		'30-DEC-2019','01-JAN-2019','start from 6PM')), REF(o) 
+		FROM organizers o
+		WHERE o.organizer_firstname = 'MARK';
+--1 rows created.
+INSERT INTO festivals (festival_id, location_id, festival_nature_id, title, fee, capacity, total_budget, time,organizer)
+SELECT seq_festival_id.NEXTVAL, 2004, 4004, 'NEW YEAR', 80, 2000, 30000,time_varray_type(time_type(
+		'31-DEC-2019','01-JAN-2020','start from 8PM')), REF(o) 
+		FROM organizers o
+		WHERE o.organizer_firstname = 'ARMAN';
+--1 rows created.		
+INSERT INTO festivals (festival_id, location_id, festival_nature_id, title, fee, capacity, total_budget, time,organizer)
+SELECT seq_festival_id.NEXTVAL, 2003, 4003, 'MUSIC FESTIVAL', 250, 2500, 50000,time_varray_type(time_type(
+		'01-jan-2019','02-jan-2019','start from 2PM')), REF(o) 
+		FROM organizers o
+		WHERE o.organizer_firstname = 'ALEYNA';
+--1 rows created.		
+INSERT INTO festivals (festival_id, location_id, festival_nature_id, title, fee, capacity, total_budget, time,organizer)
+SELECT seq_festival_id.NEXTVAL, 2002, 4003, 'SUMMERFEST', 200, 1500, 35000,time_varray_type(time_type(
+		'26-JUN-2019','29-JUN-2019','start from 11AM')), REF(o) 
+		FROM organizers o
+		WHERE o.organizer_firstname = 'BRYCE';
+--1 rows created.		
+
+-- SELECT * FROM festivals;
+-- --6 rows selected.
+
+-- column address.country FORMAT A15;
+
+
+--Inserting the data into the location_provisions table
+INSERT INTO location_provisions(location_id, provision_id)
+VALUES(2001, 1001);
+--1 row created.
+INSERT INTO location_provisions(location_id, provision_id)
+VALUES(2002, 1002);
+--1 row created.
+INSERT INTO location_provisions(location_id, provision_id)
+VALUES(2003, 1003);
+--1 row created.
+INSERT INTO location_provisions(location_id, provision_id)
+VALUES(2004, 1004);
+--1 row created.
+
+-- SELECT * FROM location_provisions;
+-- --4 rows selected.
+
+
+--Inserting the data into the festival_provisions table
+INSERT INTO festival_provisions(festival_id, provision_id, location_id)
+VALUES(3001,1001,2001);
+--1 row created.
+INSERT INTO festival_provisions(festival_id, provision_id, location_id)
+VALUES(3002,1002,2002);
+--1 row created.
+INSERT INTO festival_provisions(festival_id, provision_id, location_id)
+VALUES(3003,1003,2003);
+--1 row created.
+INSERT INTO festival_provisions(festival_id, provision_id, location_id)
+VALUES(3004,1004,2004);
+--1 row created.

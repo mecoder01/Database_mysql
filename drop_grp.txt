@@ -1,0 +1,110 @@
+-- @C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\drop_grp.txt;
+
+
+--------DROPPING THE func_proc----------
+DROP PROCEDURE proc_prov_total_cost;
+DROP PROCEDURE proc_festival_duration;
+DROP PROCEDURE proc_festival_detail;
+
+DROP FUNCTION func_festival_duration;
+DROP FUNCTION func_organizer;
+DROP FUNCTION func_location;
+
+---------DROPPING THE TRIGGERS---------------
+DROP TRIGGER trig_prov_supp;
+DROP TRIGGER trig_festiv_org;
+DROP TRIGGER trigg_del;
+DROP TRIGGER trig_fee_type;
+DROP TRIGGER trig_min_fee;
+DROP TRIGGER trig_min_budget_ck;
+DROP FUNCTION func_calc_total_amount;
+DROP FUNCTION func_calc_profit;
+DROP TRIGGER trig_fest_pred;
+
+---------DROPPING THE CURSORS---------------
+DROP PROCEDURE proc_cur_total;
+DROP PROCEDURE proc_cur_fest_city;
+DROP PROCEDURE proc_cur_fest_nature;
+DROP PROCEDURE proc_prov_del_cursor;
+
+---------DROPPING THE PACKAGES---------------
+DROP PACKAGE filter_provisions;
+DROP PACKAGE filter_festivals;
+
+
+---------DROPPING THE CONSTRAINTS---------------
+---DROPPING FOREIGN KEYS---
+ALTER TABLE festival_provisions
+DROP CONSTRAINT fk_fp_festivals;
+
+ALTER TABLE festival_provisions
+DROP CONSTRAINT fk_fp_location_provisions;
+
+ALTER TABLE location_provisions
+DROP CONSTRAINT fk_lp_provisions;
+
+ALTER TABLE location_provisions
+DROP CONSTRAINT fk_lp_locations;
+
+ALTER TABLE festivals
+DROP CONSTRAINT fk_f_festival_natures;
+
+ALTER TABLE festivals
+DROP CONSTRAINT fk_f_locations;
+
+---DROPPING PRIMARY KEYS---
+ALTER TABLE festival_provisions
+DROP CONSTRAINT pk_festival_provisions;
+
+ALTER TABLE location_provisions
+DROP CONSTRAINT pk_location_provisions;
+
+ALTER TABLE festivals
+DROP CONSTRAINT pk_festivals;
+
+ALTER TABLE festival_natures
+DROP CONSTRAINT pk_festival_natures;
+
+ALTER TABLE locations
+DROP CONSTRAINT pk_locations;
+
+ALTER TABLE provisions
+DROP CONSTRAINT pk_provisions;
+
+---------DROPPING THE TABLE-------------
+DROP TABLE organizers;
+DROP TABLE festival_provisions;
+DROP TABLE location_provisions;
+DROP TABLE festivals;
+DROP TABLE festival_natures;
+DROP TABLE locations;
+DROP TABLE provisions;
+---------DROPPING THE TYPE---------------
+DROP TYPE product_table_type;
+DROP TYPE product_type;
+DROP TYPE organizer_type;
+DROP TYPE contact_varray_type;
+DROP TYPE contact_type;
+DROP TYPE time_varray_type;
+DROP TYPE time_type;
+DROP TYPE address_type;
+---------DROPPING THE SEQUENCES----------
+DROP SEQUENCE seq_provision_id;
+DROP SEQUENCE seq_location_id;
+DROP SEQUENCE seq_festival_id;
+DROP SEQUENCE seq_festival_nature_id;
+
+
+
+PURGE RECYCLEBIN;
+
+
+SELECT * FROM tab;
+SELECT * FROM user_types;
+SELECT * FROM user_constraints;
+SELECT * FROM all_source WHERE TYPE = 'PACKAGE BODY' AND name = 'filter_provisions' ORDER BY line;
+SELECT * FROM user_triggers;
+SELECT trigger_body, description FROM user_triggers;
+
+-- ALTER TRIGGER trigger_name DISABLE | ENABLE;
+-- ALTER TABLE table name DISABLE ALL TRIGGERS;

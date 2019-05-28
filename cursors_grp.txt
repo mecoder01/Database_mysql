@@ -1,0 +1,84 @@
+-- @C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\cursors_grp.txt;
+
+--Procedure with cursor to calculate total cost of a provisional item.
+CREATE OR REPLACE PROCEDURE proc_cur_total(in_provision_id provisions.provision_id%TYPE) IS 
+CURSOR prov_cost IS
+SELECT pt.cost, pt.quantity 
+FROM provisions p, TABLE(p.product) pt
+WHERE p.provision_id = in_provision_id;
+
+vn_cost NUMBER(10):=0;
+BEGIN
+FOR rec_prov_cost IN prov_cost LOOP
+vn_cost:=vn_cost+(rec_prov_cost.cost*rec_prov_cost.quantity);
+END LOOP;
+DBMS_OUTPUT.PUT_LINE('The total cost of the provision is ' || vn_cost);
+END proc_cur_total;
+/
+--Procedure created.
+SHOW ERRORS;
+--No errors.
+
+--Procedure using cursor which takes city as input and checks the festivals happening in that city
+CREATE OR REPLACE PROCEDURE proc_cur_fest_city(in_city VARCHAR2) IS 
+CURSOR fest_city IS
+SELECT l.address.street street,l.address.city city, f.title title FROM
+locations l JOIN festivals f
+ON l.location_id=f.location_id;
+rec_fest_city fest_city%ROWTYPE;
+vn_count NUMBER(3):=0;
+BEGIN
+OPEN fest_city;
+FETCH fest_city INTO rec_fest_city;
+WHILE fest_city%FOUND LOOP
+	IF rec_fest_city.city = in_city THEN
+	vn_count:=vn_count + 1; 
+	DBMS_OUTPUT.PUT_LINE(rec_fest_city.title || ' is happening in ' || rec_fest_city.street ||', ' || rec_fest_city.city);	
+	END IF;
+	FETCH fest_city INTO rec_fest_city;
+END LOOP;
+IF (vn_count = 0)
+THEN
+DBMS_OUTPUT.PUT_LINE('Sorry there in no record for ' || in_city || ' city' );
+ELSE
+DBMS_OUTPUT.PUT_LINE('The total number of festivals happening in ' || in_city ||' is ' || vn_count);	
+END IF;
+CLOSE fest_city;
+END proc_cur_fest_city;
+/
+--Procedure created.
+SHOW ERRORS;
+--No errors.
+
+--Creating procedure using cursor for festival_type of festivals table
+CREATE OR REPLACE PROCEDURE proc_cur_fest_nature(in_festival_type festival_natures.festival_type%TYPE) IS
+CURSOR cur_fest_nature IS 
+SELECT fn.festival_type,f.title 
+FROM festival_natures fn JOIN festivals f 
+ON fn.festival_nature_id = f.festival_nature_id
+WHERE fn.festival_type = in_festival_type;
+BEGIN
+FOR rec_cur_fest_nature IN cur_fest_nature LOOP
+DBMS_OUTPUT.PUT_LINE(rec_cur_fest_nature.title);
+END LOOP;
+END proc_cur_fest_nature;
+/
+--Procedure created.
+SHOW ERRORS;
+--No errors.
+
+--Creating procedure using cursor which takes provision_title as an input to delete it.
+CREATE OR REPLACE PROCEDURE proc_prov_del_cursor(in_provision_title provisions.provision_title%TYPE) IS
+BEGIN
+DELETE FROM provisions WHERE provision_title = in_provision_title;
+IF SQL%NOTFOUND THEN
+DBMS_OUTPUT.PUT_LINE('NO RECORD FOUND TO DELETE');
+ELSE
+
+DBMS_OUTPUT.PUT_LINE(in_provision_title || ' DELETED ');
+END IF;
+END proc_prov_del_cursor;
+/
+--Procedure created.
+SHOW ERRORS;
+--No errors.

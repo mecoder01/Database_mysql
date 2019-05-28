@@ -1,0 +1,108 @@
+-- @C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\alter_table_grp.txt;
+
+---CREATING THE PRIMARY KEY FOR PROVISIONS TABLE
+ALTER TABLE provisions 
+ADD CONSTRAINT pk_provisions
+PRIMARY KEY(provision_id);
+--table altered.
+
+--FOR LOCATIONS TABLE
+ALTER TABLE locations
+ADD CONSTRAINT pk_locations
+PRIMARY KEY(location_id);
+--table altered.
+
+----FOR festival_nature
+ALTER TABLE festival_natures
+ADD CONSTRAINT pk_festival_natures
+PRIMARY KEY(festival_nature_id);
+--table altered.
+
+--FOR FESTIVALS TABLE
+ALTER TABLE festivals
+ADD CONSTRAINT pk_festivals
+PRIMARY KEY(festival_id);
+--table altered.
+
+ALTER TABLE location_provisions
+ADD CONSTRAINT pk_location_provisions
+PRIMARY KEY(provision_id,location_id);
+--table altered.
+
+ALTER TABLE festival_provisions
+ADD CONSTRAINT pk_festival_provisions
+PRIMARY KEY(festival_id,provision_id,location_id);
+--table altered.
+
+--------------------------------------------------------
+----------------FOREIGN KEYS----------------------------
+--------------------------------------------------------
+
+ALTER TABLE festivals
+ADD CONSTRAINT fk_f_locations
+FOREIGN KEY(location_id)
+REFERENCES locations(location_id);
+--table altered.
+
+ALTER TABLE festivals
+ADD CONSTRAINT fk_f_festival_natures
+FOREIGN KEY(festival_nature_id)
+REFERENCES festival_natures(festival_nature_id);
+--table altered.
+
+---------------------------------------------------------------
+ALTER TABLE location_provisions
+ADD CONSTRAINT fk_lp_locations
+FOREIGN KEY(location_id)
+REFERENCES locations(location_id);
+--table altered.
+
+ALTER TABLE location_provisions
+ADD CONSTRAINT fk_lp_provisions
+FOREIGN KEY(provision_id)
+REFERENCES provisions(provision_id);
+--table altered.
+
+-----------------------------------------------------
+
+ALTER TABLE festival_provisions
+ADD CONSTRAINT fk_fp_location_provisions
+FOREIGN KEY(location_id,provision_id)
+REFERENCES location_provisions(location_id,provision_id);
+--table altered.
+
+ALTER TABLE festival_provisions
+ADD CONSTRAINT fk_fp_festivals
+FOREIGN KEY(festival_id)
+REFERENCES festivals(festival_id);
+--table altered.
+
+
+
+--------UPPER------------
+ALTER TABLE provisions
+ADD CONSTRAINT ck_provision_title
+CHECK (provision_title = upper(provision_title));
+--table altered.
+
+ALTER TABLE provisions
+ADD CONSTRAINT ck_provision_supplier
+CHECK (supplier = upper(supplier));
+--table altered.
+
+ALTER TABLE festivals
+ADD CONSTRAINT ck_festival_title
+CHECK (title = upper(title));
+--table altered.
+
+-----------------CEHCK IN----------------------
+
+ALTER TABLE festivals 
+ADD CONSTRAINT ck_festival_capacity
+CHECK (capacity>0);
+--table altered.
+
+ALTER TABLE festivals 
+ADD CONSTRAINT ck_festival_total_budget
+CHECK (total_budget>0);
+--table altered.

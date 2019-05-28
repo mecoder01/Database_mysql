@@ -1,0 +1,191 @@
+-- @C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\create_table_grp.txt;
+
+-------------CREATING SEQUENCE-------------------
+
+--Querying for the sequences viewing
+SELECT sequence_name FROM user_sequences;
+--no rows selected.
+
+--Creating a sequences for provision_id
+CREATE SEQUENCE seq_provision_id
+START WITH 1001
+MAXVALUE 1999
+INCREMENT BY 1;
+--Sequence created.
+
+--Querying for the sequences viewing
+SELECT sequence_name FROM user_sequences;
+--'seq_provision_id' is selected
+--1 row selected.
+
+--Creating a sequences for location_id
+CREATE SEQUENCE seq_location_id
+START WITH 2001
+MAXVALUE 2999
+INCREMENT BY 1;
+--Sequence created.
+
+--Querying for the sequences viewing
+SELECT sequence_name FROM user_sequences;
+--2 row selected.
+
+--Creating a sequences
+CREATE SEQUENCE seq_festival_id
+START WITH 3001
+MAXVALUE 3999
+INCREMENT BY 1;
+--Sequence created.
+
+--Querying for the sequences viewing
+SELECT sequence_name FROM user_sequences;
+--3 row selected.
+
+--Creating a sequences
+CREATE SEQUENCE seq_festival_nature_id
+START WITH 4001
+MAXVALUE 4999
+INCREMENT BY 1;
+--Sequence created.
+
+--Querying for the sequences viewing
+SELECT sequence_name FROM user_sequences;
+--4 row selected.
+
+
+
+-----------CREATING TYPE----------------
+
+--Creating product_type for provision table
+CREATE OR REPLACE TYPE product_type AS OBJECT (
+product_name VARCHAR2(25),
+cost NUMBER(10,2),
+category VARCHAR2(25),
+quantity NUMBER(10),
+description VARCHAR2(255));
+/
+--type created 
+SHOW ERRORS;
+--no errors
+
+
+--This table type is used in nested table
+CREATE TYPE product_table_type AS TABLE OF product_type;
+/
+--type created 
+SHOW ERRORS; 
+--no errors
+
+
+--Creating contact_type for festival table
+CREATE OR REPLACE TYPE contact_type AS OBJECT (
+email VARCHAR2(30),
+phone_number VARCHAR2(20));
+/
+--type created 
+SHOW ERRORS;
+--no errors
+
+--Creating contact_varray_type for festival table
+CREATE TYPE contact_varray_type AS VARRAY(50) OF contact_type;
+/
+--type created 
+SHOW ERRORS;
+--no errors
+
+--Creating organizer_type for festival table
+CREATE OR REPLACE TYPE organizer_type AS OBJECT (
+organizer_firstname VARCHAR2(25),
+organizer_surname VARCHAR2(25),
+contact contact_type,
+gender CHAR,
+description VARCHAR2(255)
+);
+/
+--type created 
+SHOW ERRORS; 
+--no errors
+
+
+--Creating time_type for festival table
+CREATE OR REPLACE TYPE time_type AS OBJECT (
+start_date DATE,
+end_date DATE,
+start_time VARCHAR2(25));
+/
+--type created 
+SHOW ERRORS;
+--no errors
+
+--Creating time_varray_type for festival table
+CREATE TYPE time_varray_type AS VARRAY(50) OF time_type;
+/
+--type created 
+SHOW ERRORS;
+--no errors
+
+--Creating type named as address_type
+CREATE OR REPLACE TYPE address_type AS OBJECT (
+street VARCHAR2(30),
+city VARCHAR2(25),
+country VARCHAR2(25));
+/
+--type created 
+SHOW ERRORS;
+--no errors
+
+
+
+---------------CREATING TABLE----------------------
+
+--Creating table for the use of scope
+CREATE TABLE organizers OF organizer_type;
+--table created.
+
+--Creating table named as provisions
+CREATE TABLE provisions (
+provision_id NUMBER(10),
+provision_title VARCHAR2(25),
+supplier VARCHAR2(25),
+product product_table_type)
+NESTED TABLE product STORE AS product_table;
+--table created 
+SHOW ERRORS;
+--no errors
+
+--Creating table named as festivals
+CREATE TABLE festivals (
+festival_id NUMBER(10),
+location_id NUMBER(10) NOT NULL,
+festival_nature_id NUMBER(10),
+title VARCHAR2(25),
+organizer REF organizer_type SCOPE IS organizers,
+time time_varray_type,
+capacity NUMBER(5),
+total_budget NUMBER(10,2),
+fee NUMBER(10,2));
+--table created.
+
+--Creating table named as locations
+CREATE TABLE locations (
+location_id NUMBER(10),
+address address_type NOT NULL);
+--table created
+
+--Creating table named as festival_provisions
+CREATE TABLE festival_provisions (
+festival_id NUMBER(10),
+provision_id NUMBER(10),
+location_id NUMBER(10));
+--table created
+
+--Creating table named as location_provisions
+CREATE TABLE location_provisions (
+location_id NUMBER(10),
+provision_id NUMBER(10));
+--table created
+
+--Creating named as festival_natures
+CREATE TABLE festival_natures (
+festival_nature_id NUMBER(10),
+festival_type VARCHAR2(30));
+--table created.

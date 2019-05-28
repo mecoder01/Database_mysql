@@ -1,0 +1,81 @@
+-- @C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\package_grp.txt;
+
+---------------------------------------------------
+-----Creating package to Filter provisions and find out the supplier of the provisional item
+CREATE OR REPLACE PACKAGE filter_provisions AS
+FUNCTION func_filter_by_prod_name ( in_product_name VARCHAR2)
+RETURN NUMBER;
+PROCEDURE proc_filter_by_prod_name (in_product_name VARCHAR2);
+END filter_provisions;
+/
+--package created.
+
+CREATE OR REPLACE PACKAGE BODY filter_provisions AS 
+vn_provision_id provisions.provision_id%TYPE;
+vc_provision_title provisions.provision_title%TYPE;
+vc_supplier provisions.supplier%TYPE;
+FUNCTION func_filter_by_prod_name(in_product_name VARCHAR2)
+RETURN NUMBER IS
+BEGIN
+	SELECT p.provision_id INTO vn_provision_id
+	FROM provisions p, table(p.product) pt
+	WHERE pt.product_name = in_product_name;
+	RETURN vn_provision_id;
+END;
+PROCEDURE proc_filter_by_prod_name(in_product_name VARCHAR2) IS
+BEGIN 
+	vn_provision_id := func_filter_by_prod_name(in_product_name);
+	SELECT provision_title INTO vc_provision_title FROM provisions WHERE provision_id = vn_provision_id;
+	SELECT supplier INTO vc_supplier FROM provisions WHERE provision_id = vn_provision_id;
+	DBMS_OUTPUT.PUT_LINE(vc_provision_title || ' is supplied by ' || vc_supplier );
+END;
+END filter_provisions;
+/
+--package body created.
+SHOW ERRORS;
+--No errors.
+
+---------------------------------------------------
+---------------------------------------------------
+CREATE OR REPLACE PACKAGE filter_festivals AS
+FUNCTION func_filter_by_org_name ( in_organizer_firstname VARCHAR2)
+RETURN NUMBER;
+PROCEDURE proc_filter_by_org_name (in_organizer_firstname VARCHAR2);
+END filter_festivals;
+/
+--package created.
+
+CREATE OR REPLACE PACKAGE BODY filter_festivals AS 
+vn_festival_id festivals.festival_id%TYPE;
+vc_title festivals.title%TYPE;
+vn_capacity festivals.capacity%TYPE;
+vn_total_budget festivals.total_budget%TYPE;
+vn_fee festivals.fee%TYPE;
+vc_organizer_firstname organizers.organizer_firstname%TYPE;
+FUNCTION func_filter_by_org_name(in_organizer_firstname VARCHAR2)
+RETURN NUMBER IS
+BEGIN
+	SELECT f.festival_id INTO vn_festival_id
+	FROM festivals f
+	WHERE f.organizer.organizer_firstname = in_organizer_firstname;
+	RETURN vn_festival_id;
+END;
+PROCEDURE proc_filter_by_org_name(in_organizer_firstname VARCHAR2) IS
+BEGIN 
+	vn_festival_id := func_filter_by_org_name(in_organizer_firstname);
+	SELECT title INTO vc_title FROM festivals WHERE festival_id = vn_festival_id;
+
+	SELECT capacity INTO vn_capacity FROM festivals WHERE festival_id = vn_festival_id;
+	SELECT total_budget INTO vn_total_budget FROM festivals WHERE festival_id = vn_festival_id;
+	SELECT fee INTO vn_fee FROM festivals WHERE festival_id = vn_festival_id;
+	DBMS_OUTPUT.PUT_LINE('The capacity of ' || vc_title || ' festival is ' || vn_capacity); 
+	DBMS_OUTPUT.PUT_LINE(' and the ticket fee is ' ||  vn_fee || ' where the total_budget is ' || vn_total_budget);
+END;
+END filter_festivals;
+/
+--package body created.
+SHOW ERRORS;
+--No errors.
+
+---------------------------------------------------
+---------------------------------------------------

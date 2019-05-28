@@ -1,0 +1,70 @@
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for proc_cur_total procedure--------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the proc_cur_total exists after compiling the code
+SELECT object_name FROM user_objects;
+--proc_cur_total exists
+
+--Executing the procedure proc_cur_total by giving the valid inputs
+EXEC proc_cur_total(1003);
+--The total cost should be 1100.
+--"The total cost of the provision is 1100" is returned.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for proc_cur_fest_city procedure--------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the proc_cur_fest_city exists after compiling the code
+SELECT object_name FROM user_objects;
+--proc_cur_fest_city exists
+
+--Executing the procedure proc_cur_fest_city by giving the valid input
+EXEC proc_cur_fest_city('MANCHESTER');
+--The festivals happening in that city along street address should be displayed
+--The festivals which are happening in that city are displayed along with the address
+
+--Executing the procedure proc_cur_fest_city by giving the input that doesn't exists
+EXEC proc_cur_fest_city('NEW YORK');
+--EXECCustom error message should be displayed
+--"Sorry there in no record for NEW YORK city" is being displayed.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for proc_cur_fest_nature procedure--------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the proc_cur_fest_nature exists after compiling the code
+SELECT object_name FROM user_objects;
+--proc_cur_fest_nature exists
+
+--Executing the procedure proc_cur_fest_nature by giving the valid input
+EXEC proc_cur_fest_nature('CELEBRATION');
+--MUSIC FESTIVAL and SUMMERFEST should be displayed.
+--Festivals MUSIC FESTIVAL and SUMMERFEST are displayed.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for proc_prov_del_cursor procedure-----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the proc_prov_del_cursor exists after compiling the code
+SELECT object_name FROM user_objects;
+--proc_prov_del_cursor exists
+
+--First checking the provision "FOOD" and the supplier
+SELECT provision_title, supplier FROM provisions;
+--"FOOD" provision exists in provisions table
+
+--For this testing we should delete data from location_provision and festival_provision cause of foreign key constraint
+DELETE FROM festival_provisions WHERE provision_id=1001;
+DELETE FROM location_provisions WHERE provision_id=1001;
+--Executing the procedure proc_prov_del_cursor by giving the valid input
+EXEC proc_prov_del_cursor('FOOD');
+--The provision should be deleted and the deleted message should be displayed
+--First checking the provision "FOOD" and the supplier
+SELECT provision_title, supplier FROM provisions;
+--"FOOD" provision doesn't exist in provisions table
+--"FOOD DELETED" is displayed
+

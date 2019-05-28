@@ -1,0 +1,136 @@
+-- @C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\trigger_grp.txt;
+
+--Creating trigger to show the supplier of provisions 
+CREATE OR REPLACE TRIGGER trig_prov_supp
+BEFORE INSERT OR UPDATE OF supplier ON provisions
+FOR EACH ROW
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('The supplier for ' || :NEW.provision_title || ' is: ' || :NEW.supplier);
+END trig_prov_supp;
+/
+--Trigger created.
+SHOW ERRORS;
+--No errors.
+
+
+--Creating trigger to show total budget of the festival
+CREATE OR REPLACE TRIGGER trig_festiv_org
+BEFORE INSERT OR UPDATE ON festivals
+FOR EACH ROW
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('The Total Budget for ' || :NEW.title || ' is: ' || :NEW.total_budget);
+END trig_festiv_org;
+/
+--Trigger created.
+SHOW ERRORS;
+--No errors.
+
+
+---Creating a trigger to delete organizer from organizers table
+CREATE OR REPLACE TRIGGER trigg_del
+AFTER DELETE ON organizers
+FOR EACH ROW
+BEGIN
+	DBMS_OUTPUT.PUT_LINE(:OLD.organizer_firstname  || ' ' || :OLD.organizer_surname || ' is no longer an organizer.');
+END trigg_del;
+/
+--Trigger created.
+SHOW ERRORS;
+--No errors.
+
+
+
+--Creating a trigger for checking the fee type on festivals table
+CREATE OR REPLACE TRIGGER trig_fee_type
+AFTER INSERT OR UPDATE OF fee ON festivals
+FOR EACH ROW
+WHEN (NEW.fee IS NOT NULL)
+BEGIN 
+	IF :NEW.fee > 100
+	THEN
+	DBMS_OUTPUT.PUT_LINE('Fee £' || :NEW.fee || ' is VIP ticket price.');
+	ELSE
+	DBMS_OUTPUT.PUT_LINE('Fee £' || :NEW.fee || ' is normal ticket price.');
+	END IF;
+END trig_fee_type;
+/
+--Trigger created.
+SHOW ERRORS;
+--No errors.
+
+--Creating a trigger for checking the minimum fee on festivals table
+CREATE or REPLACE TRIGGER trig_min_fee
+BEFORE INSERT OR UPDATE  ON festivals
+FOR EACH ROW
+WHEN (NEW.fee <= 10)
+BEGIN
+	RAISE_APPLICATION_ERROR(-20000, 'The minimum festival fee must be 10 or more.'); 
+
+END trig_min_fee;
+/
+--Trigger created.
+SHOW ERRORS;
+--No errors.
+
+--Creating a trigger for checking minimum budget on festivals table
+CREATE or REPLACE TRIGGER trig_min_budget_ck
+BEFORE INSERT OR UPDATE  ON festivals
+FOR EACH ROW
+WHEN (NEW.total_budget < 10000)
+BEGIN
+RAISE_APPLICATION_ERROR(-20000, 'The total budget must be 10000 or more.'); 
+
+END trig_min_budget_ck;
+/
+--Trigger created.
+SHOW ERRORS;
+--No errors.
+
+
+-----------------------------------------------------------------
+--------------FOR PREDICATES---------------------
+
+CREATE OR REPLACE FUNCTION func_calc_total_amount (in_fee NUMBER, in_capacity NUMBER) RETURN NUMBER IS
+	
+	vn_amount NUMBER(10,2);
+BEGIN
+	vn_amount := in_fee * in_capacity;
+	RETURN vn_amount;	
+END func_calc_total_amount;
+/
+--Function Created.
+SHOW ERRORS;
+--No errors.
+
+CREATE OR REPLACE FUNCTION func_calc_profit(in_total_budget NUMBER, in_amount NUMBER) RETURN NUMBER IS
+vn_profit NUMBER(10,2);
+BEGIN
+	
+	vn_profit := in_amount-in_total_budget;
+	RETURN vn_profit;
+END func_calc_profit;
+/
+--Function created.
+SHOW ERRORS;
+--No errors.
+
+CREATE OR REPLACE TRIGGER trig_fest_pred
+AFTER INSERT OR UPDATE OR DELETE ON festivals
+FOR EACH ROW
+DECLARE
+vc_total NUMBER(10,2) ;
+BEGIN
+IF INSERTING THEN 
+DBMS_OUTPUT.PUT_LINE('The total expected ticket amount is ' || func_calc_total_amount(:NEW.fee,:NEW.capacity) );
+ELSIF UPDATING THEN
+vc_total :=func_calc_total_amount(:NEW.fee,:NEW.capacity); 
+DBMS_OUTPUT.PUT_LINE('The assumend profit is ' || func_calc_profit(:NEW.total_budget,vc_total) );
+ELSE
+DBMS_OUTPUT.PUT_LINE(:OLD.title || ' is being deleted ');
+END IF;
+END trig_fest_pred;
+/
+--Trigger created.
+SHOW ERRORS;
+--No errors.
+

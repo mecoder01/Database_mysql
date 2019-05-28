@@ -1,0 +1,114 @@
+-- @C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\procedures_functions_grp.txt;
+
+-----PROCEDURE TO TEST the total cost of a product in provision
+SET SERVEROUTPUT ON;
+CREATE OR REPLACE PROCEDURE proc_prov_total_cost(in_provision_id provisions.provision_id%TYPE, in_product_name VARCHAR2) IS
+vn_cost NUMBER(10);
+
+BEGIN
+SELECT (pt.cost*pt.quantity) INTO vn_cost
+FROM provisions p, TABLE(p.product) pt
+WHERE p.provision_id = in_provision_id
+AND 
+pt.product_name= in_product_name;
+DBMS_OUTPUT.PUT_LINE('The total cost of the product is ' || vn_cost);
+EXCEPTION 
+   WHEN no_data_found THEN 
+      dbms_output.put_line('No Data Found!'); 
+END proc_prov_total_cost;
+/
+--Procedure created.
+SHOW ERRORS;
+--No errors.
+
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+
+--Creating function which is used in proc_festival_duration which calculated remaining days and returnes the numeric value
+CREATE OR REPLACE FUNCTION func_festival_duration(in_start_date DATE, in_end_date DATE) RETURN NUMBER IS 
+vn_duration NUMBER(4);
+BEGIN
+vn_duration := in_start_date - in_end_date;
+RETURN vn_duration;
+END func_festival_duration;
+/
+--Function created.
+SHOW ERRORS;
+--No errors.
+
+--Creating procedure which takes festival_id as input and displays the duration of festival in days 
+CREATE OR REPLACE PROCEDURE proc_festival_duration(in_festival_id festivals.festival_id%TYPE) IS 
+vd_start_date DATE;
+vd_end_date DATE;
+BEGIN
+SELECT t.start_date INTO vd_start_date
+FROM festivals f, TABLE (f.time) t
+WHERE f.festival_id=in_festival_id;
+
+SELECT t.end_date INTO vd_end_date
+FROM festivals f, TABLE (f.time) t
+WHERE f.festival_id=in_festival_id;
+DBMS_OUTPUT.PUT_LINE('The duration of festival is ' || func_festival_duration(vd_end_date,vd_start_date) || ' days');
+END proc_festival_duration;
+/
+--Procedure created.
+SHOW ERRORS;
+--No errors.
+
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION func_organizer(in_festival_id festivals.festival_id%TYPE) RETURN VARCHAR2 IS 
+vc_org VARCHAR2(255);
+vc_gender CHAR;
+vc_notation VARCHAR2(5);
+BEGIN
+SELECT f.organizer.gender INTO vc_gender FROM festivals f WHERE f.festival_id=in_festival_id;
+IF vc_gender ='M'
+THEN 
+vc_notation:='Mr. ';
+ELSE
+vc_notation:='Mrs. ';
+END IF;
+SELECT CONCAT(vc_notation , CONCAT( f.organizer.organizer_firstname ,CONCAT(' ',CONCAT(f.organizer.organizer_surname,CONCAT(' Phone :- ',f.organizer.contact.phone_number))))) INTO vc_org 
+FROM festivals f WHERE f.festival_id=in_festival_id;
+RETURN vc_org;
+END func_organizer;
+/
+--Function created.
+SHOW ERRORS;
+--No errors.
+
+CREATE OR REPLACE FUNCTION func_location(in_festival_id festivals.festival_id%TYPE) RETURN VARCHAR2 IS 
+vc_location VARCHAR2(255);
+
+BEGIN
+SELECT CONCAT( l.address.street,CONCAT(', ',CONCAT(l.address.city,CONCAT(', ',l.address.country)))) INTO vc_location
+FROM
+locations l JOIN festivals f
+ON l.location_id=f.location_id
+WHERE f.festival_id=in_festival_id;
+
+RETURN vc_location;
+END func_location;
+/
+--Function created.
+SHOW ERRORS;
+--No errors.
+
+--PROCEDURE TO LIST THE DEATIL OF THE FESTIVAL 
+CREATE OR REPLACE PROCEDURE proc_festival_detail(in_festival_id festivals.festival_id%TYPE) IS 
+vc_title festivals.title%TYPE;
+BEGIN
+SELECT title INTO vc_title FROM festivals WHERE festival_id=in_festival_id;
+DBMS_OUTPUT.PUT_LINE('The details of '|| vc_title ||' festival is given below:');
+proc_festival_duration(in_festival_id);
+DBMS_OUTPUT.PUT_LINE('The Organizer Name and Phone Number is: ' || func_organizer(in_festival_id));
+DBMS_OUTPUT.PUT_LINE('The street,city and country of location are: ' || func_location(in_festival_id));
+END proc_festival_detail;
+/
+--Procedure created.
+SHOW ERRORS;
+--No errors.
+-------------------------------------------------------------------------------------------------------------------
+

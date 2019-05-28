@@ -1,0 +1,20 @@
+-- @C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\run_grp.txt;
+
+--First of all setting the sql plus attributes to view tables in nice manner
+SET lines 256
+SET trimout ON
+SET tab off
+SET SERVEROUTPUT ON;
+
+@C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\create_table_grp.txt;
+@C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\alter_table_grp.txt;
+@C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\insert_grp.txt;
+@C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\procedures_functions_grp.txt;
+@C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\cursors_grp.txt;
+@C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\package_grp.txt;
+@C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\trigger_grp.txt;
+
+
+
+--@C:\Users\Kenner\Desktop\Database-GP\Final_DB\DB-Assignment\drop_grp.txt;
+

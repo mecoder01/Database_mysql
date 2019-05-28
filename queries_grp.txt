@@ -1,0 +1,73 @@
+
+------------------------------------------------------------------------------------
+
+---Query to select organizer detail from festival table
+--First of all adjusting the column format to display clearer
+COLUMN firstname FORMAT A15
+COLUMN surname FORMAT A15
+COLUMN description FORMAT A40
+COLUMN email FORMAT A30
+SELECT
+f.festival_id Festival_id,f.organizer.organizer_firstname Firstname,f.organizer.organizer_surname Surname,
+f.organizer.contact.phone_number Phone,f.organizer.contact.email Email,f.organizer.gender Gender,
+f.organizer.description Description 
+FROM festivals f;
+
+--------------------------------------------------------------------------------
+
+--Query to view the time and date of the festival table 
+SELECT f.festival_id, t.start_date,t.end_date,t.start_time FROM
+festivals f, TABLE(f.time) t;
+
+----------------------------------------------------------------------------------
+
+--Query to view the location of the festival and the category of festival
+SELECT f.festival_id, fn.festival_type, l.address.street,l.address.city,l.address.country
+FROM festivals f JOIN locations l 
+ON f.location_id=l.location_id
+JOIN festival_natures fn
+ON f.festival_nature_id=fn.festival_nature_id;
+
+-------------------------------------------------------------------------------------------
+
+--Query to view the total budget and grouping them using group by clause
+SELECT  total_budget FROM festivals
+WHERE total_budget BETWEEN 20000 AND 40000;
+
+------------------------------------------------------------------------------------------
+
+--Query to view the provisions of festivals
+SELECT f.title,p.provision_title,p.supplier
+FROM provisions p JOIN location_provisions lp 
+ON p.provision_id=lp.provision_id 
+JOIN festival_provisions fp
+ON lp.location_id=fp.location_id AND lp.provision_id=fp.provision_id
+JOIN festivals f 
+ON f.festival_id=fp.festival_id;
+
+-------------------------------------------------------------------------------------------------------------
+
+----Queries to view the products of the provisions
+COLUMN provision_title FORMAT A15
+COLUMN supplier FORMAT A25
+COLUMN category FORMAT A20
+COLUMN product_name FORMAT A15
+
+SELECT DISTINCT pp.product_name,p.provision_title,p.supplier,pp.cost,pp.category,pp.category,pp.quantity
+FROM provisions p, TABLE(p.product) pp; 
+
+-------------------------------------------------------------------------------------------------------------------
+
+--Quering to view the location details of the festival. Nested CONCAT function is used to display the address in simple manner
+SELECT f.title, CONCAT( l.address.street,CONCAT(', ',CONCAT(l.address.city,CONCAT(', ',l.address.country)))) address
+FROM
+locations l JOIN festivals f
+ON l.location_id=f.location_id;
+
+
+--Quering to view the number of festivals in a city
+SELECT DISTINCT l.address.city,f.title, f.festival_id
+FROM locations l JOIN festivals f 
+ON l.location_id=f.location_id
+WHERE l.address.city='MANCHESTER';
+

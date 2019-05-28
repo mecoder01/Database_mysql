@@ -1,0 +1,56 @@
+-------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for proc_prov_total_cost procedure------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the procedure exists exists after compiling the code
+SELECT object_name FROM user_objects;
+--proc_prov_total_cost exists exists after compiling the code
+
+--Executing the procedure by giving the valid inputs
+EXEC proc_prov_total_cost(1001,'PIZZA');
+--The total cost should be 1800
+--"The total cost of the product is 1800" is returned.
+
+--Executing the procedure by giving the data that doesn't exist
+EXEC proc_prov_total_cost(1001,'TACO');
+--Custom error should be displayed
+--"No Data Found!" is returned.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for proc_festival_duration & func_festival_duration function----------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the procedure exists exists after compiling the code
+SELECT object_name FROM user_objects;
+--proc_festival_duration exists
+
+--Checking if the function exists exists after compiling the code
+SELECT object_name FROM user_objects;
+--func_festival_duration exists
+
+--Executing the procedure by giving the valid inputs
+EXEC proc_festival_duration(3003);
+--1 day should be returned
+--"The duration of festival is 1 days" is returned.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for proc_festival_detail procedure and func_organizer, func_location functions----------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the proc_festival_detail exists after compiling the code
+SELECT object_name FROM user_objects;
+--proc_festival_detail exists
+
+--Checking if the func_organizer exists after compiling the code
+SELECT object_name FROM user_objects;
+--func_organizer exists
+
+--Checking if the func_location exists after compiling the code
+SELECT object_name FROM user_objects;
+--func_location exists
+
+--Executing the procedure proc_festival_detail by giving the valid inputs
+EXEC proc_festival_detail(3001);
+--Festival's duration, organizer's detail and the location of the festival should be displayed
+--The duration, organizer's detail and the location of the festival are displayed.
+

@@ -1,0 +1,138 @@
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for trig_prov_supp trigger--------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the trig_prov_supp exists after compiling the code
+SELECT object_name FROM user_objects;
+--trig_prov_supp exists
+
+--Checking the trigger trig_prov_supp by inserting valid datas
+INSERT INTO provisions (provision_id,provision_title,supplier,product)
+VALUES(seq_provision_id.NEXTVAL,'TOOLS','JOHNSON CRAFTS',product_table_type(
+		product_type('TENTS',120,'TARP TENT',5,'FLEXIBLE AND RELIABLE'),
+		product_type('POLES',120,'CARBON FIBER POLES',5,'LIGHT AND STRONG')
+		));
+--The supplier name should be displayed 
+--"The supplier for TOOLS is: JOHNSON CRAFTS" is displayed
+
+--Checking the trigger trig_prov_supp by updating valid datas
+UPDATE provisions set supplier='TED CRAFTS' WHERE supplier ='JOHNSON CRAFTS';
+--New supplier name should be displayed
+--"The supplier for TOOLS is: TED CRAFTS" is displayed
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for trig_festiv_org trigger-------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the trig_festiv_org exists after compiling the code
+SELECT object_name FROM user_objects;
+--trig_festiv_org exists
+
+--Checking the trigger trig_festiv_org by inserting valid datas
+INSERT INTO festivals (festival_id, location_id, festival_nature_id, title, fee, capacity, total_budget, time,organizer)
+SELECT seq_festival_id.NEXTVAL, 2006, 4002, 'COMIC CON', 75, 750, 100000,time_varray_type(time_type(
+		'28-FEB-2019','3-MAR-2019','start from 8AM')), REF(o) 
+		FROM organizers o
+		WHERE o.organizer_firstname = 'BROWNSON';
+--Total budget 10000 And ecpected ticket amount 56250 should be displayed
+--"The Total Budget for COMIC CON is: 100000"
+--"The total expected ticket amount is 56250"
+-- "Fee ┬ú75 is normal ticket price." is displayed
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for trig_fee_type trigger---------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the trig_fee_type exists after compiling the code
+SELECT object_name FROM user_objects;
+--trig_fee_type exists
+
+--Checking the trigger trig_fee_type by inserting valid datas
+INSERT INTO festivals (festival_id, location_id, festival_nature_id, title, fee, capacity, total_budget, time,organizer)
+SELECT seq_festival_id.NEXTVAL, 2006, 4002, 'METAL FEST', 75, 750, 50000,time_varray_type(time_type(
+		'28-FEB-2019','3-MAR-2019','start from 8AM')), REF(o) 
+		FROM organizers o
+		WHERE o.organizer_firstname = 'BROWNSON';
+--The ticket type is normal should be displayed.
+--"Fee £75 is normal ticket price." is displayed
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for trig_min_fee trigger---------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+
+SELECT object_name FROM user_objects;
+--trig_min_fee exists
+
+INSERT INTO festivals (festival_id, location_id, festival_nature_id, title, fee, capacity, total_budget, time,organizer)
+SELECT seq_festival_id.NEXTVAL, 2005, 4002, 'CHRISTMAS', 5, 1500, 25000,time_varray_type(time_type(
+		'30-DEC-2019','01-JAN-2019','start from 6PM')), REF(o) 
+		FROM organizers o
+		WHERE o.organizer_firstname = 'MARK';
+--The error message should be display.
+-- "The minimum festival fee must be 10 or more." is displayed.
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for trig_min_budget_ck trigger---------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+SELECT object_name FROM user_objects;
+--trig_min_budget_ck exists
+
+INSERT INTO festivals (festival_id, location_id, festival_nature_id, title, fee, capacity, total_budget, time,organizer)
+SELECT seq_festival_id.NEXTVAL, 2003, 4003, 'MUSIC FESTIVAL', 250, 2500, 5000,time_varray_type(time_type(
+		'01-jan-2019','02-jan-2019','start from 2PM')), REF(o) 
+		FROM organizers o
+		WHERE o.organizer_firstname = 'ALEYNA';
+--The error message should be display.
+-- "The total budget must be 10000 or more." is displayed.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for trig_fest_pred trigger---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the func_calc_total_amount exists after compiling the code
+SELECT object_name FROM user_objects;
+--func_calc_total_amount exists
+
+--Checking if the func_calc_profit exists after compiling the code
+SELECT object_name FROM user_objects;
+--func_calc_profit exists
+
+--Checking if the trig_fest_pred exists after compiling the code
+SELECT object_name FROM user_objects;
+--trig_fest_pred exists
+
+--Checking the trigger trig_fest_pred by inserting valid datas
+INSERT INTO festivals (festival_id, location_id, festival_nature_id, title, fee, capacity, total_budget, time,organizer)
+SELECT seq_festival_id.NEXTVAL, 2006, 4002, 'METAL FEST', 75, 750, 60000,time_varray_type(time_type(
+		'27-JAN-2019','3-FEB-2019','start from 5PM')), REF(o) 
+		FROM organizers o
+		WHERE o.organizer_firstname = 'BROWNSON';
+--10000 as total budget should be displayed.
+--"The Total Budget for METAL FEST is: 10000" is displayed.
+
+--Checking the trigger trig_fest_pred by updating valid datas
+UPDATE festivals set title ='HEAVY METAL FEST' WHERE festival_id=3002;
+--46250 as assumed profit should be displayed.
+--"The assumend profit is 46250" is displayed.
+
+------------------------------------------------------------------------------------------------------------------------------------------
+-----Testing for trigg_del trigger--------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------
+
+--Checking if the trigg_del exists after compiling the code
+SELECT object_name FROM user_objects;
+--trigg_del exists
+
+--Checking the trigger trigg_del by deleting an data from organizers table
+DELETE FROM organizers WHERE organizer_firstname = 'BROWNSON';
+--BROWNSON CHARLES  is no longer is an organizer should be displayed.
+--"BROWNSON CHARLES is no longer organizers."
+--1 row deleted.
+
+
+
+
+
